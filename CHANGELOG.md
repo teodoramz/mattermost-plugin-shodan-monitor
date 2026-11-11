@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-11-11
+
+### Security
+
+- Plugin binaries are now built with the latest stable Go release. 1.0.0 was built with Go 1.26.0,
+  which has known vulnerabilities in the Go standard library (`net/http`, `crypto/tls`,
+  `crypto/x509`). Upgrade from 1.0.0.
+
+### Changed
+
+- CI and the release workflow use the latest stable Go and run `govulncheck`; a release is not
+  published when it finds a vulnerability.
+
 ## [1.0.0] - 2026-11-11
 
 Initial release.

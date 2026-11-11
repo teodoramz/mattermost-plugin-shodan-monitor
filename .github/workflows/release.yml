@@ -73,10 +73,13 @@ jobs:
             echo "\`-<os>-<arch>.tar.gz\` in System Console → Plugins → Plugin Management."
           } >> notes.md
 
+      # Latest stable Go, not the minimum version in go.mod, so release binaries
+      # get the newest standard library security fixes.
       - uses: actions/setup-go@v5
         if: steps.version.outputs.exists == 'false'
         with:
-          go-version-file: go.mod
+          go-version: stable
+          check-latest: true
 
       - uses: actions/setup-node@v4
         if: steps.version.outputs.exists == 'false'
@@ -86,6 +89,10 @@ jobs:
       - name: Test
         if: steps.version.outputs.exists == 'false'
         run: make test
+
+      - name: Vulnerability check (a vulnerable build is never released)
+        if: steps.version.outputs.exists == 'false'
+        run: go run golang.org/x/vuln/cmd/govulncheck@v1.9.0 ./server/...
 
       - name: Build the combined and per-platform bundles
         if: steps.version.outputs.exists == 'false'
