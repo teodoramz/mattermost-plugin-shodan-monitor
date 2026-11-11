@@ -1,0 +1,38 @@
+{
+ "ip_str": "198.51.100.20",
+ "hostnames": [],
+ "domains": [],
+ "country_name": "Exampleland",
+ "country_code": "XL",
+ "city": null,
+ "region_code": null,
+ "latitude": null,
+ "longitude": null,
+ "org": "Example DNS",
+ "isp": "Example DNS",
+ "asn": "AS64501",
+ "os": "FreeBSD",
+ "tags": [],
+ "last_update": "2026-01-02T00:00:00.000000",
+ "ports": [
+  53
+ ],
+ "data": [
+  {
+   "port": 53,
+   "transport": "udp",
+   "product": "Unbound",
+   "_shodan": {
+    "module": "dns-udp"
+   },
+   "data": "\nRecursion: enabled",
+   "dns": {
+    "recursive": true,
+    "software": "unbound 1.19"
+   },
+   "hostnames": [
+    "dns.example.net"
+   ]
+  }
+ ]
+}

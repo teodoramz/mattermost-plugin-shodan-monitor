@@ -1,0 +1,12 @@
+{
+  "name": "shodan-monitor-webapp",
+  "private": true,
+  "description": "System Console 'IP list' upload box for the Shodan Monitor plugin. Plain JavaScript that uses the React instance Mattermost exposes on window - no bundler, no dependencies.",
+  "scripts": {
+    "build": "node build.js",
+    "debug": "node build.js",
+    "lint": "node --check src/index.js",
+    "check-types": "node --check src/index.js",
+    "test": "node --check src/index.js"
+  }
+}

@@ -1,0 +1,42 @@
+{
+ "ip": "198.51.100.20",
+ "status": "found",
+ "hostnames": [
+  "dns.example.net"
+ ],
+ "domains": [],
+ "country": "Exampleland",
+ "country_code": "XL",
+ "city": null,
+ "region": null,
+ "latitude": null,
+ "longitude": null,
+ "organization": "Example DNS",
+ "isp": "Example DNS",
+ "asn": "AS64501",
+ "operating_systems": [
+  "FreeBSD"
+ ],
+ "tags": [],
+ "last_update": "2026-01-02T00:00:00.000000",
+ "open_ports": [
+  53
+ ],
+ "ports": [
+  {
+   "port": 53,
+   "transport": "udp",
+   "service": "dns-udp",
+   "product": "Unbound",
+   "banner": "\nRecursion: enabled",
+   "details": {
+    "dns": {
+     "recursive": true,
+     "software": "unbound 1.19"
+    }
+   }
+  }
+ ],
+ "cve_count": 0,
+ "cves": []
+}

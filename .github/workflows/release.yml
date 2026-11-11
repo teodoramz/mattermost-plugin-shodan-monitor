@@ -1,0 +1,103 @@
+name: release
+
+# Publishes a GitHub release when the version in plugin.json changes on main.
+#
+#   make patch|minor|major     # bump "version" in plugin.json
+#   (add a "## [x.y.z]" section to CHANGELOG.md)
+#   git commit && git push     # this workflow tags vx.y.z and publishes the release
+#
+# It can also be started by hand (Actions -> release -> Run workflow). A version
+# that already has a tag is never released twice.
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - plugin.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read the version from plugin.json
+        id: version
+        run: |
+          version=$(jq -r .version plugin.json)
+          if ! echo "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error file=plugin.json::\"version\" must be x.y.z, got '$version'"
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=v$version" >> "$GITHUB_OUTPUT"
+          echo "min_server_version=$(jq -r .min_server_version plugin.json)" >> "$GITHUB_OUTPUT"
+          if git rev-parse -q --verify "refs/tags/v$version" > /dev/null; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "v$version is already released; nothing to do."
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Release notes from CHANGELOG.md
+        if: steps.version.outputs.exists == 'false'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          MIN_SERVER: ${{ steps.version.outputs.min_server_version }}
+        run: |
+          awk -v head="## [$VERSION]" '
+            index($0, head) == 1 { found = 1; next }
+            found && /^## \[/    { exit }
+            found                { print }
+          ' CHANGELOG.md > notes.md
+          if ! grep -q '[^[:space:]]' notes.md; then
+            echo "::error file=CHANGELOG.md::no \"## [$VERSION]\" section found"
+            exit 1
+          fi
+          {
+            echo
+            echo "Supported Mattermost Server versions: $MIN_SERVER+"
+            echo
+            echo "Install \`shodan-monitor-$VERSION.tar.gz\` (all platforms) or the matching"
+            echo "\`-<os>-<arch>.tar.gz\` in System Console → Plugins → Plugin Management."
+          } >> notes.md
+
+      - uses: actions/setup-go@v5
+        if: steps.version.outputs.exists == 'false'
+        with:
+          go-version-file: go.mod
+
+      - uses: actions/setup-node@v4
+        if: steps.version.outputs.exists == 'false'
+        with:
+          node-version: 20
+
+      - name: Test
+        if: steps.version.outputs.exists == 'false'
+        run: make test
+
+      - name: Build the combined and per-platform bundles
+        if: steps.version.outputs.exists == 'false'
+        run: make dist-per-platform
+
+      - name: Publish the release
+        if: steps.version.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          name: ${{ steps.version.outputs.tag }}
+          body_path: notes.md
+          files: dist/*.tar.gz
+          fail_on_unmatched_files: true

@@ -1,0 +1,56 @@
+{
+  "id": "shodan-monitor",
+  "name": "Shodan Monitor",
+  "description": "Monitors a list of public IPs with Shodan and posts what changed to a Mattermost channel.",
+  "homepage_url": "https://github.com/teodoramz/mattermost-plugin-shodan-monitor",
+  "support_url": "https://github.com/teodoramz/mattermost-plugin-shodan-monitor/issues",
+  "icon_path": "assets/icon.svg",
+  "version": "1.0.0",
+  "min_server_version": "7.8.0",
+  "server": {
+    "executables": {
+      "linux-amd64": "server/dist/plugin-linux-amd64",
+      "linux-arm64": "server/dist/plugin-linux-arm64",
+      "darwin-amd64": "server/dist/plugin-darwin-amd64",
+      "darwin-arm64": "server/dist/plugin-darwin-arm64",
+      "windows-amd64": "server/dist/plugin-windows-amd64.exe"
+    }
+  },
+  "webapp": {
+    "bundle_path": "webapp/dist/main.js"
+  },
+  "settings_schema": {
+    "header": "Monitors a list of public IP addresses with Shodan and posts what changed. Run /shodan help in Mattermost for all commands.",
+    "footer": "Reports are posted to the private channel chosen with /shodan report-here. Access: system admins, team admins of the report team (when enabled above), and users added with /shodan access add @user.",
+    "settings": [
+      {
+        "key": "ShodanAPIKeys",
+        "display_name": "Shodan API keys",
+        "type": "longtext",
+        "secret": true,
+        "help_text": "One key per line. When several keys are given, they are used in turn. A key that is invalid or out of credits is skipped for the rest of a run, and the report warns about it.",
+        "default": ""
+      },
+      {
+        "key": "LookupIntervalDays",
+        "display_name": "Lookup interval (days)",
+        "type": "number",
+        "help_text": "How often the whole IP list is looked up again and the changes posted to the report channel. Set to 0 to turn scheduled lookups off.",
+        "default": 30
+      },
+      {
+        "key": "TeamAdminAccess",
+        "display_name": "Team admins have access",
+        "type": "bool",
+        "help_text": "When on, team admins of the team that receives the scheduled reports (see /shodan report-here) can use Shodan Monitor. System admins always have access; other users can be added with /shodan access add.",
+        "default": false
+      },
+      {
+        "key": "IPList",
+        "display_name": "IP list",
+        "type": "custom",
+        "help_text": "Upload a .txt file with one IP address per line to replace the whole list. Blank lines and lines starting with # are ignored; invalid and non-public addresses are rejected. Single IPs can be added or removed with /shodan add and /shodan remove. Users with access who are not system admins can upload by sending the file to @shodan-monitor in a direct message."
+      }
+    ]
+  }
+}

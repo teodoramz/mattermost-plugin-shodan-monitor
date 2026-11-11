@@ -1,0 +1,266 @@
+{
+ "ip_str": "203.0.113.10",
+ "ip": 3405803786,
+ "hostnames": [
+  "www.example.com"
+ ],
+ "domains": [
+  "example.com"
+ ],
+ "country_name": "Exampleland",
+ "country_code": "XL",
+ "city": "Sample City",
+ "region_code": "SC",
+ "latitude": 10.5,
+ "longitude": 20.25,
+ "org": "Example Hosting",
+ "isp": "Example ISP",
+ "asn": "AS64500",
+ "os": null,
+ "tags": [
+  "cloud"
+ ],
+ "last_update": "2026-01-02T03:04:05.000000",
+ "ports": [
+  443,
+  80,
+  22,
+  123,
+  80
+ ],
+ "vulns": [
+  "CVE-2099-0001",
+  "CVE-2099-0002",
+  "CVE-2099-0003",
+  "CVE-2099-0100"
+ ],
+ "data": [
+  {
+   "port": 443,
+   "transport": "tcp",
+   "product": "nginx",
+   "version": "1.18.0",
+   "os": null,
+   "_shodan": {
+    "module": "https",
+    "id": "x"
+   },
+   "timestamp": "2026-01-02T03:04:05.000000",
+   "hostnames": [
+    "www.example.com",
+    "cdn.example.com"
+   ],
+   "domains": [
+    "example.com"
+   ],
+   "cpe23": [
+    "cpe:2.3:a:f5:nginx:1.18.0"
+   ],
+   "cpe": [
+    "cpe:/a:f5:nginx:1.18.0"
+   ],
+   "data": "HTTP/1.1 200 OK\r\nServer: nginx/1.18.0\r\n\r\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+   "http": {
+    "status": 200,
+    "title": "Example <b>Portal</b> & Login",
+    "server": "nginx/1.18.0",
+    "host": "www.example.com",
+    "location": "/",
+    "html": "<html></html>",
+    "redirects": [
+     {
+      "host": "www.example.com",
+      "data": "...",
+      "location": "/login"
+     },
+     {
+      "host": "x",
+      "data": "..."
+     }
+    ],
+    "components": {
+     "jQuery": {
+      "categories": [
+       "JavaScript libraries"
+      ]
+     },
+     "Bootstrap": {}
+    },
+    "waf": null,
+    "robots": "User-agent: *\nDisallow: /admin\n",
+    "favicon": {
+     "hash": -123456789,
+     "data": "..."
+    }
+   },
+   "ssl": {
+    "cert": {
+     "subject": {
+      "CN": "www.example.com",
+      "O": "Example"
+     },
+     "issuer": {
+      "CN": "Example CA"
+     },
+     "issued": "20260101000000Z",
+     "expires": "20270101000000Z",
+     "expired": false,
+     "serial": 123456789012345678901234567890,
+     "sig_alg": "sha256WithRSAEncryption",
+     "fingerprint": {
+      "sha256": "abababababababababababababababababababababababababababababababab",
+      "sha1": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+     },
+     "extensions": [
+      {
+       "name": "subjectAltName",
+       "data": "DNS:www.example.com, DNS:example.com"
+      }
+     ]
+    },
+    "versions": [
+     "TLSv1.2",
+     "TLSv1.3",
+     "-SSLv3"
+    ],
+    "cipher": {
+     "name": "TLS_AES_256_GCM_SHA384",
+     "bits": 256
+    },
+    "alpn": [
+     "h2",
+     "http/1.1"
+    ],
+    "jarm": "2ad2ad2ad2ad2ad2ad2ad2ad2ad2ad2ad2ad2ad2ad2ad2ad2ad2ad2ad2ad",
+    "ja3s": "ffffffffffffffffffffffffffffffff"
+   },
+   "vulns": {
+    "CVE-2099-0001": {
+     "cvss": 9.8,
+     "cvss_version": 3.1,
+     "epss": 0.01,
+     "ranking_epss": 0.5,
+     "kev": true,
+     "verified": false,
+     "summary": "Remote code execution in the example server.",
+     "references": [
+      "https://example.com/advisory"
+     ]
+    },
+    "CVE-2099-0002": {
+     "cvss": 7.5,
+     "cvss_version": 3.1,
+     "epss": 0.01,
+     "ranking_epss": 0.5,
+     "kev": false,
+     "verified": false,
+     "summary": "Denial of service in the example server.",
+     "references": [
+      "https://example.com/advisory"
+     ]
+    },
+    "CVE-2099-0003": {
+     "cvss": 5.3,
+     "cvss_version": 3.1,
+     "epss": 0.01,
+     "ranking_epss": 0.5,
+     "kev": false,
+     "verified": true,
+     "summary": "Information disclosure in the example server.",
+     "references": [
+      "https://example.com/advisory"
+     ]
+    }
+   },
+   "location": {
+    "city": "Sample City"
+   },
+   "opts": {
+    "raw": "zz"
+   },
+   "tcp": {
+    "fp": "t1"
+   },
+   "cloud": {
+    "provider": "ExampleCloud",
+    "region": "x-1"
+   }
+  },
+  {
+   "port": 80,
+   "transport": "tcp",
+   "product": "nginx",
+   "version": "1.18.0",
+   "_shodan": {
+    "module": "http"
+   },
+   "timestamp": "2026-01-01T00:00:00.000000",
+   "data": "HTTP/1.1 301 Moved",
+   "http": {
+    "status": 301,
+    "title": "",
+    "server": "nginx/1.18.0",
+    "location": "https://www.example.com/"
+   },
+   "vulns": {
+    "CVE-2099-0002": {
+     "cvss": 7.5,
+     "cvss_version": 3.1,
+     "epss": 0.01,
+     "ranking_epss": 0.5,
+     "kev": false,
+     "verified": false,
+     "summary": "Denial of service in the example server.",
+     "references": [
+      "https://example.com/advisory"
+     ]
+    },
+    "CVE-2099-0004": {
+     "cvss": null,
+     "summary": "No score yet.",
+     "verified": false,
+     "references": []
+    }
+   }
+  },
+  {
+   "port": 22,
+   "transport": "tcp",
+   "product": "OpenSSH",
+   "version": "8.9p1",
+   "os": "Linux",
+   "info": "protocol 2.0",
+   "_shodan": {
+    "module": "ssh"
+   },
+   "data": "SSH-2.0-OpenSSH_8.9p1",
+   "ssh": {
+    "type": "ssh-ed25519",
+    "fingerprint": "11:22:33",
+    "key": "AAAA...",
+    "hassh": "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh",
+    "kex": {
+     "kex_algorithms": [
+      "curve25519-sha256"
+     ]
+    },
+    "cipher": "aes128-ctr",
+    "mac": "hmac-sha2-256"
+   }
+  },
+  {
+   "port": 123,
+   "transport": "udp",
+   "product": "ntpd",
+   "_shodan": {
+    "module": "ntp"
+   },
+   "data": "NTP",
+   "ntp": {
+    "version": 4,
+    "stratum": 2
+   },
+   "devicetype": "router"
+  }
+ ]
+}
