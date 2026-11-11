@@ -8,18 +8,26 @@ import (
 // maxCVEsInSummary is how many CVEs a single-IP post lists before "... and N more".
 const maxCVEsInSummary = 10
 
-// hostLabel is the short "Org · ASN" shown next to an IP.
+// hostLabel is the short "Organization · ISP · ASN" shown next to an IP.
 func hostLabel(r LookupResult, old *Snapshot) string {
-	org, asn := "", ""
+	org, isp, asn := "", "", ""
 	if r.Host != nil {
-		org, asn = r.Host.Organization, r.Host.ASN
+		org, isp, asn = r.Host.Organization, r.Host.ISP, r.Host.ASN
 	}
-	if org == "" && old != nil {
-		org, asn = old.Org, old.ASN
+	if org == "" && isp == "" && old != nil {
+		org, isp, asn = old.Org, old.ISP, old.ASN
 	}
+	return joinDistinct(org, isp, asn)
+}
+
+// joinDistinct joins the non-empty values with " · ", skipping repeats
+// (the ISP is often the same as the organization).
+func joinDistinct(values ...string) string {
 	parts := []string{}
-	for _, s := range []string{org, asn} {
-		if s != "" {
+	seen := map[string]bool{}
+	for _, s := range values {
+		if s != "" && !seen[s] {
+			seen[s] = true
 			parts = append(parts, s)
 		}
 	}
@@ -36,8 +44,8 @@ func describeResult(r LookupResult) string {
 	}
 	h := r.Host
 	parts := []string{}
-	if h.Organization != "" {
-		parts = append(parts, h.Organization)
+	if who := joinDistinct(h.Organization, h.ISP); who != "" {
+		parts = append(parts, who)
 	}
 	if len(h.OpenPorts) > 0 {
 		parts = append(parts, fmt.Sprintf("%s (%s)", plural(len(h.OpenPorts), "open port", "open ports"), joinInts(h.OpenPorts)))
