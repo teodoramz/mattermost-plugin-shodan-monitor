@@ -49,13 +49,16 @@ System Console > Plugins > Shodan Monitor:
 | Shodan API keys | | One per line |
 | Lookup interval (days) | 30 | `0` disables scheduled lookups |
 | Team admins have access | Off | Team admins of the team that receives the reports |
+| Allow public channels | Off | Also post results in public channels |
 | IP list | | Upload / download the list |
 
-Then run `/shodan report-here` in a **private** channel.
+Then run `/shodan report-here` in the channel that should get the reports. It must be private unless
+**Allow public channels** is on.
 
 ## Security
 
-- Results are posted only in private channels and direct messages.
+- By default, results are posted only in private channels and direct messages, so users without access
+  can't read them. **Allow public channels** changes this.
 - The HTTP API is limited to system admins and protected against CSRF by Mattermost.
 - Text coming from Shodan is escaped: it cannot add links, formatting or `@mentions` to posts.
 - API keys are never posted, logged or written to `results.json`.

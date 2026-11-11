@@ -237,7 +237,7 @@ func (p *Plugin) lookupSingle(ctx context.Context, ip string, req runRequest) {
 		p.saveBaseline(ip, snap)
 	}
 
-	if p.isPublicChannel(req.ChannelID) {
+	if !p.canPostResults(req.ChannelID) {
 		p.ephemeral(req.UserID, req.ChannelID, publicChannelText)
 		return
 	}
@@ -281,8 +281,8 @@ func buildResultsJSON(o *runOutcome) ([]byte, error) {
 }
 
 func (p *Plugin) postRunReport(channelID string, o *runOutcome) {
-	if p.isPublicChannel(channelID) {
-		p.API.LogError("report not posted: the channel is public or no longer exists", "channel_id", channelID)
+	if !p.canPostResults(channelID) {
+		p.API.LogError("report not posted: the channel no longer exists, or it is public and public channels are not allowed", "channel_id", channelID)
 		return
 	}
 	msg, full, cut := renderRunReport(o)

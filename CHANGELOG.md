@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-11
+
+### Added
+
+- "Allow public channels" setting, off by default. When on, lookups, active scans and scheduled reports
+  can also be posted in public channels.
+- `/shodan status` shows whether public channels are allowed.
+
 ## [1.0.1] - 2026-11-11
 
 ### Security

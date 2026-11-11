@@ -18,6 +18,9 @@ type configuration struct {
 	// TeamAdminAccess gives team admins of the report channel's team access.
 	TeamAdminAccess bool
 
+	// AllowPublicChannels lets results be posted in public channels too.
+	AllowPublicChannels bool
+
 	// The "IPList" setting is a custom System Console component; the list itself
 	// lives in the KV store, never in the configuration.
 }

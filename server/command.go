@@ -78,7 +78,7 @@ func (p *Plugin) ExecuteCommand(_ *plugin.Context, args *model.CommandArgs) (*mo
 
 	switch sub {
 	case "help":
-		return respond(helpText(p.isSysAdmin(args.UserId))), nil
+		return respond(p.helpText(p.isSysAdmin(args.UserId))), nil
 	case "status":
 		return respond(p.statusText()), nil
 	case "list":
@@ -97,11 +97,15 @@ func (p *Plugin) ExecuteCommand(_ *plugin.Context, args *model.CommandArgs) (*mo
 		if !p.isSysAdmin(args.UserId) {
 			return respond("Only system admins can choose the report channel."), nil
 		}
-		if p.isPublicChannel(args.ChannelId) {
-			return respond("The report channel must be private, so users without Shodan Monitor access can't read the reports. Run this in a private channel."), nil
+		if !p.canPostResults(args.ChannelId) {
+			return respond("The report channel must be private, so users without Shodan Monitor access can't read the reports. " +
+				"Run this in a private channel, or turn on \"Allow public channels\" in the plugin settings."), nil
 		}
 		if err := p.setReportChannel(args.ChannelId); err != nil {
 			return respond("Could not save the report channel: " + err.Error()), nil
+		}
+		if ch, appErr := p.API.GetChannel(args.ChannelId); appErr == nil && ch.Type == model.ChannelTypeOpen {
+			return respond("Scheduled reports will be posted in this channel. **Note:** this is a public channel, so every member of the team can read the reports."), nil
 		}
 		return respond("Scheduled reports will be posted in this channel."), nil
 	case "access":
@@ -113,7 +117,7 @@ func (p *Plugin) ExecuteCommand(_ *plugin.Context, args *model.CommandArgs) (*mo
 	return respond(fmt.Sprintf("Unknown option `%s`. Run `/shodan help` for the list of options.", sub)), nil
 }
 
-func helpText(admin bool) string {
+func (p *Plugin) helpText(admin bool) string {
 	s := "### " + productName() + " - usage\n" +
 		"| Command | What it does |\n|---|---|\n" +
 		"| `/shodan status` | List size, schedule, report channel, API key status |\n" +
@@ -131,8 +135,10 @@ func helpText(admin bool) string {
 			"| `/shodan access remove @user` | Remove a user's access *(system admins)* |\n" +
 			"| `/shodan access list` | Users given access manually *(system admins)* |\n"
 	}
-	s += "\nEvery N days (System Console → Plugins → Shodan Monitor) the whole list is looked up again and only the IPs that changed are posted to the report channel, with the full `results.json` attached. " +
-		"Results are only posted in private channels and direct messages."
+	s += "\nEvery N days (System Console → Plugins → Shodan Monitor) the whole list is looked up again and only the IPs that changed are posted to the report channel, with the full `results.json` attached."
+	if !p.getConfiguration().AllowPublicChannels {
+		s += " Results are only posted in private channels and direct messages."
+	}
 	return s
 }
 
@@ -199,7 +205,7 @@ func (p *Plugin) lookupCommand(args *model.CommandArgs, rest []string) string {
 	if len(p.getConfiguration().apiKeys()) == 0 {
 		return "No Shodan API key is configured. A system admin can add keys in **System Console → Plugins → Shodan Monitor**."
 	}
-	if p.isPublicChannel(args.ChannelId) {
+	if !p.canPostResults(args.ChannelId) {
 		return publicChannelText
 	}
 	target := "all"
@@ -238,7 +244,7 @@ func (p *Plugin) scanCommand(args *model.CommandArgs, rest []string) string {
 	if len(p.getConfiguration().apiKeys()) == 0 {
 		return "No Shodan API key is configured. A system admin can add keys in **System Console → Plugins → Shodan Monitor**."
 	}
-	if p.isPublicChannel(args.ChannelId) {
+	if !p.canPostResults(args.ChannelId) {
 		return publicChannelText
 	}
 	req := runRequest{Kind: runActive, ChannelID: args.ChannelId, UserID: args.UserId}
@@ -365,7 +371,7 @@ func (p *Plugin) statusText() string {
 	fmt.Fprintf(&b, "- **IP list:** %s\n", plural(len(ips), "IP", "IPs"))
 
 	if ch := p.getReportChannel(); ch == "" {
-		b.WriteString("- **Report channel:** not set - run `/shodan report-here` in the private channel that should get the reports\n")
+		b.WriteString("- **Report channel:** not set - run `/shodan report-here` in the channel that should get the reports\n")
 	} else if c, appErr := p.API.GetChannel(ch); appErr == nil {
 		name := c.DisplayName
 		if name == "" {
@@ -376,6 +382,11 @@ func (p *Plugin) statusText() string {
 		b.WriteString("- **Report channel:** the saved channel no longer exists - run `/shodan report-here` again\n")
 	}
 
+	if cfg.AllowPublicChannels {
+		b.WriteString("- **Public channels:** allowed (results posted there are visible to every member of the team)\n")
+	} else {
+		b.WriteString("- **Public channels:** not allowed - results are only posted in private channels and direct messages\n")
+	}
 	if cfg.LookupIntervalDays > 0 {
 		fmt.Fprintf(&b, "- **Lookup interval:** every %s\n", plural(cfg.LookupIntervalDays, "day", "days"))
 	} else {

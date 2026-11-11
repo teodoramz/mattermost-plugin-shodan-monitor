@@ -3,6 +3,8 @@ package main
 import (
 	"strings"
 	"testing"
+
+	"github.com/mattermost/mattermost/server/public/model"
 )
 
 func TestMdNeutralisesMentionsAndMarkup(t *testing.T) {
@@ -26,5 +28,27 @@ func TestMdNeutralisesMentionsAndMarkup(t *testing.T) {
 	}
 	if strings.Contains(md("line1\nline2\r"), "\n") {
 		t.Error("md kept a newline")
+	}
+}
+
+func TestCanPostIn(t *testing.T) {
+	off := &configuration{}
+	on := &configuration{AllowPublicChannels: true}
+	cases := []struct {
+		chType model.ChannelType
+		cfg    *configuration
+		want   bool
+	}{
+		{model.ChannelTypePrivate, off, true},
+		{model.ChannelTypeDirect, off, true},
+		{model.ChannelTypeGroup, off, true},
+		{model.ChannelTypeOpen, off, false},
+		{model.ChannelTypeOpen, on, true},
+		{model.ChannelTypePrivate, on, true},
+	}
+	for _, c := range cases {
+		if got := canPostIn(&model.Channel{Type: c.chType}, c.cfg); got != c.want {
+			t.Errorf("canPostIn(type %q, allowPublic=%v) = %v, want %v", c.chType, c.cfg.AllowPublicChannels, got, c.want)
+		}
 	}
 }

@@ -5,7 +5,7 @@
   "homepage_url": "https://github.com/teodoramz/mattermost-plugin-shodan-monitor",
   "support_url": "https://github.com/teodoramz/mattermost-plugin-shodan-monitor/issues",
   "icon_path": "assets/icon.svg",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "min_server_version": "7.8.0",
   "server": {
     "executables": {
@@ -21,7 +21,7 @@
   },
   "settings_schema": {
     "header": "Monitors a list of public IP addresses with Shodan and posts what changed. Run /shodan help in Mattermost for all commands.",
-    "footer": "Reports are posted to the private channel chosen with /shodan report-here. Access: system admins, team admins of the report team (when enabled above), and users added with /shodan access add @user.",
+    "footer": "Reports are posted to the channel chosen with /shodan report-here (a private channel, unless public channels are allowed above). Access: system admins, team admins of the report team (when enabled above), and users added with /shodan access add @user.",
     "settings": [
       {
         "key": "ShodanAPIKeys",
@@ -43,6 +43,13 @@
         "display_name": "Team admins have access",
         "type": "bool",
         "help_text": "When on, team admins of the team that receives the scheduled reports (see /shodan report-here) can use Shodan Monitor. System admins always have access; other users can be added with /shodan access add.",
+        "default": false
+      },
+      {
+        "key": "AllowPublicChannels",
+        "display_name": "Allow public channels",
+        "type": "bool",
+        "help_text": "When off, results are only posted in private channels and direct messages, so users without Shodan Monitor access can't read them. When on, results can also be posted in public channels, where every member of the team can read them.",
         "default": false
       },
       {

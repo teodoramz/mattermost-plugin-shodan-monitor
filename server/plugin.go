@@ -170,10 +170,14 @@ func (p *Plugin) scheduleState() (string, bool) {
 	}
 	reportChannel := p.getReportChannel()
 	if reportChannel == "" {
-		return "no report channel - run /shodan report-here in the private channel that should get the reports", false
+		return "no report channel - run /shodan report-here in the channel that should get the reports", false
 	}
-	if p.isPublicChannel(reportChannel) {
-		return "the report channel is public (or no longer exists) - make it private, or run /shodan report-here in a private channel", false
+	ch, appErr := p.API.GetChannel(reportChannel)
+	if appErr != nil {
+		return "the report channel no longer exists - run /shodan report-here again", false
+	}
+	if !canPostIn(ch, cfg) {
+		return "the report channel is public and \"Allow public channels\" is off - make the channel private, turn the setting on, or run /shodan report-here in a private channel", false
 	}
 	ips, err := p.getIPList()
 	if err != nil {

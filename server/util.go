@@ -122,18 +122,24 @@ func (p *Plugin) reportTeam() *model.Team {
 	return team
 }
 
-// isPublicChannel: results are never posted in public channels, so users
-// without Shodan Monitor access can't read them.
-func (p *Plugin) isPublicChannel(channelID string) bool {
+// canPostResults: results go to private channels and direct/group messages,
+// and to public channels only when "Allow public channels" is on. A channel
+// that can't be found is never posted to.
+func (p *Plugin) canPostResults(channelID string) bool {
 	ch, appErr := p.API.GetChannel(channelID)
 	if appErr != nil {
-		return true // unknown: treat as public, i.e. don't post
+		return false
 	}
-	return ch.Type == model.ChannelTypeOpen
+	return canPostIn(ch, p.getConfiguration())
+}
+
+func canPostIn(ch *model.Channel, cfg *configuration) bool {
+	return ch.Type != model.ChannelTypeOpen || cfg.AllowPublicChannels
 }
 
 const publicChannelText = "Results are only posted in private channels and direct messages, so users without " +
-	"Shodan Monitor access can't see them. Run this in a private channel or in a direct message with @shodan-monitor."
+	"Shodan Monitor access can't see them. Run this in a private channel or in a direct message with @shodan-monitor, " +
+	"or ask a system admin to turn on \"Allow public channels\" in the plugin settings."
 
 func (p *Plugin) username(userID string) string {
 	if userID == "" {
