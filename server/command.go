@@ -59,8 +59,11 @@ func (p *Plugin) registerCommand() error {
 	})
 }
 
+// respond builds the private reply to a /shodan command. Slack-compatibility
+// parsing is skipped: it turns "<x|y>" into a link, which breaks Markdown
+// tables whose cells contain placeholders such as <ip>.
 func respond(text string) *model.CommandResponse {
-	return &model.CommandResponse{ResponseType: model.CommandResponseTypeEphemeral, Text: text}
+	return &model.CommandResponse{ResponseType: model.CommandResponseTypeEphemeral, Text: text, SkipSlackParsing: true}
 }
 
 // ExecuteCommand handles /shodan.

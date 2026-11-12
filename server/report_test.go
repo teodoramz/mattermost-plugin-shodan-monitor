@@ -3,6 +3,8 @@ package main
 import (
 	"strings"
 	"testing"
+
+	"github.com/mattermost/mattermost/server/public/model"
 )
 
 func TestHostLabelShowsISP(t *testing.T) {
@@ -36,5 +38,17 @@ func TestDescribeResultShowsISP(t *testing.T) {
 	got := describeResult(r)
 	if !strings.HasPrefix(got, "Linode · Akamai Connected Cloud · 2 open ports (22, 80)") {
 		t.Errorf("describeResult = %q", got)
+	}
+}
+
+// Mattermost converts Slack-style "<x|y>" links in command responses unless
+// SkipSlackParsing is set; the help table would be broken by that conversion.
+func TestRespondSkipsSlackParsing(t *testing.T) {
+	r := respond("| `/shodan add <ip>` | Add |\n| `/shodan remove <ip>` | Remove |")
+	if !r.SkipSlackParsing {
+		t.Fatal("respond must set SkipSlackParsing")
+	}
+	if got := model.ParseSlackLinksToMarkdown(r.Text); got == r.Text {
+		t.Fatal("expected Slack parsing to alter this text; the test no longer guards anything")
 	}
 }
